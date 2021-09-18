@@ -1,4 +1,4 @@
-import express, { query, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { readFile } from 'fs';
 import sharp from 'sharp';
 
@@ -31,8 +31,8 @@ app.get('/api/image', (req: Request, res: Response) => {
     } else {
         readFile(`./assets/${imagename}`, async (error, data) => {
             if (error) {
-                res.status(400);
-                res.send('There was an error processing your request.');
+                res.status(404);
+                res.send(`The requested file could not be found. ${imagename}`);
             } else {
                 await sharp(data).resize({width, height})
                                 .toFile(`assets/resizedImages/${imagename}`)
@@ -41,7 +41,7 @@ app.get('/api/image', (req: Request, res: Response) => {
                                     res.sendFile(`${imagename}`, {root: './assets/resizedImages' })
                                 }).catch(() => {
                                     res.status(400);
-                                    res.send(`The requested file could not be found.`);
+                                    res.send(`The requested image could not be resized.`);
                                 });
             }
         });

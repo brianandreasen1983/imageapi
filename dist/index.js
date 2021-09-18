@@ -70,8 +70,8 @@ app.get('/api/image', function (req, res) {
                 switch (_a.label) {
                     case 0:
                         if (!error) return [3 /*break*/, 1];
-                        res.status(400);
-                        res.send('There was an error processing your request.');
+                        res.status(404);
+                        res.send("The requested file could not be found. " + imagename);
                         return [3 /*break*/, 3];
                     case 1: return [4 /*yield*/, (0, sharp_1.default)(data).resize({ width: width, height: height })
                             .toFile("assets/resizedImages/" + imagename)
@@ -80,7 +80,7 @@ app.get('/api/image', function (req, res) {
                             res.sendFile("" + imagename, { root: './assets/resizedImages' });
                         }).catch(function () {
                             res.status(400);
-                            res.send("The requested file could not be found.");
+                            res.send("The requested image could not be resized.");
                         })];
                     case 2:
                         _a.sent();

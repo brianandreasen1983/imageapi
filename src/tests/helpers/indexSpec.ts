@@ -54,6 +54,18 @@ describe('image api endpoint tests', () => {
         })
     });
 
+    it('image api endpoint returns that the file cant be found if it does not exist', () => {
+        return request.get('/api/image').query({
+            width:200,
+            height: 200,
+            imagename: 'test.jpg'
+        }).then((response) => {
+            expect(response.status).toBe(404);
+        }).catch((error) => {
+            console.log(error);
+        })
+    });
+
     it('image api endpoint returns a resized image when all query parameters are supplied.', () => {
         return request.get('/api/image').query({
             width: 200,
@@ -66,4 +78,5 @@ describe('image api endpoint tests', () => {
             console.log(error);
         });
     });
+
 });

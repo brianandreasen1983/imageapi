@@ -96,13 +96,23 @@ describe('image api endpoint tests', function () {
             console.log(error);
         });
     });
+    it('image api endpoint returns that the file cant be found if it does not exist', function () {
+        return request.get('/api/image').query({
+            width: 200,
+            height: 200,
+            imagename: 'test.jpg'
+        }).then(function (response) {
+            expect(response.status).toBe(404);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    });
     it('image api endpoint returns a resized image when all query parameters are supplied.', function () {
         return request.get('/api/image').query({
             width: 200,
             height: 200,
             imagename: 'fjord.jpg',
         }).then(function (response) {
-            console.log(response.status);
             expect(response.status).toBe(200);
         }).catch(function (error) {
             console.log('There was an error');
