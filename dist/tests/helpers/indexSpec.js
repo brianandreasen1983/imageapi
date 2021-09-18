@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = __importDefault(require("../../index"));
 var supertest_1 = __importDefault(require("supertest"));
 var request = (0, supertest_1.default)(index_1.default);
-describe('Test endpoint responses', function () {
+describe('test endpoint', function () {
     it('gets the api endpoint', function (done) { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -56,4 +56,57 @@ describe('Test endpoint responses', function () {
             }
         });
     }); });
+});
+describe('image api endpoint tests', function () {
+    it('image api endpoint fails without any supplied parameters', function () {
+        return request.get('/api/image').then(function (response) {
+            expect(response.status).toBe(400);
+        });
+    });
+    it('image api endpoint returns 400 when a width query parameter value is 0.', function () {
+        return request.get('/api/image').query({
+            width: 0,
+            height: 200,
+            imagename: 'fjord.jpg',
+        }).then(function (response) {
+            expect(response.status).toBe(400);
+        }).catch(function (error) {
+            console.log('ERROR', error);
+        });
+    });
+    it('image api endpoint returns 400 when a height query parameter value is 0.', function () {
+        return request.get('/api/image').query({
+            width: 200,
+            height: 0,
+            imagename: 'fjord.jpg'
+        }).then(function (response) {
+            expect(response.status).toBe(400);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    });
+    it('image api endpoint returns 400 when a imagename query parameter value is blank.', function () {
+        return request.get('/api/image').query({
+            width: 200,
+            height: 200,
+            imagename: '',
+        }).then(function (response) {
+            expect(response.status).toBe(400);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    });
+    it('image api endpoint returns a resized image when all query parameters are supplied.', function () {
+        return request.get('/api/image').query({
+            width: 200,
+            height: 200,
+            imagename: 'fjord.jpg',
+        }).then(function (response) {
+            console.log(response.status);
+            expect(response.status).toBe(200);
+        }).catch(function (error) {
+            console.log('There was an error');
+            console.log(error);
+        });
+    });
 });
