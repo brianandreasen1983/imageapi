@@ -82,9 +82,7 @@ var resizeImageAsync = function (data, width, height, imagename) { return __awai
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, sharp_1.default)(data).resize({ width: width, height: height })
                     .toFile("assets/resizedImages/" + imagename)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
+            case 1: return [2 /*return*/, _a.sent()];
         }
     });
 }); };

@@ -1,11 +1,15 @@
 import express, { Request, Response } from 'express';
 import fs from 'fs';
-import sharp from 'sharp';
+import sharp, { OutputInfo } from 'sharp';
 
 const app = express();
 const port = 3000;
 
-const isWidthValid = (width: number) => {
+/** isWidthValid validates whether the number is 0 or undefined.
+ * @params width
+ * @returns boolean
+ */
+const isWidthValid = (width: number): boolean => {
     if(width === 0 || width === undefined) {
         return false;
     } else {
@@ -13,7 +17,11 @@ const isWidthValid = (width: number) => {
     }
 };
 
-const isHeightValid = (height: number) => {
+/** isHeightValid validates whether the number is 0 or undefined.
+ * @params height
+ * @returns boolean
+ */
+const isHeightValid = (height: number): boolean => {
     if(height === 0 || height === undefined) {
         return false;
     } else {
@@ -21,7 +29,11 @@ const isHeightValid = (height: number) => {
     }
 };
 
-const isImageNameValid = (imagename: string) => {
+/** isImageNameValid validates whether the number is blank or undefined.
+ * @params imagename
+ * @returns boolean
+ */
+const isImageNameValid = (imagename: string): boolean => {
     if(imagename === undefined || imagename === '') {
         return false;
     } else {
@@ -29,7 +41,11 @@ const isImageNameValid = (imagename: string) => {
     }
 };
 
-const isImageFileExtensionValid = (imagename: string) => {
+/** isImageFileExtensionValid validates whether or not the imagename contains a valid .jpg extension
+ * @params imagename
+ * @returns boolean
+ */
+const isImageFileExtensionValid = (imagename: string): boolean => {
     const fileExtension = imagename.split('.');
     if(fileExtension[1] != 'jpg') {
         return false;
@@ -38,8 +54,15 @@ const isImageFileExtensionValid = (imagename: string) => {
     }
 };
 
-const resizeImageAsync = async (data: Buffer, width: number, height: number, imagename: string) => {
-    await sharp(data).resize({width, height})
+/** resizeImageAsync resizes a passed in image.
+ * @params data
+ * @params width
+ * @params height
+ * @params imagename
+ * @returns OutputInfo
+ */
+const resizeImageAsync = async (data: Buffer, width: number, height: number, imagename: string): Promise<OutputInfo> => {
+    return await sharp(data).resize({width, height})
                      .toFile(`assets/resizedImages/${imagename}`);
 };
 
