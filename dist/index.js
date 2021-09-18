@@ -40,48 +40,108 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var fs_1 = require("fs");
+var fs_1 = __importDefault(require("fs"));
 var sharp_1 = __importDefault(require("sharp"));
 var app = (0, express_1.default)();
 var port = 3000;
+var isWidthValid = function (width) {
+    if (width === 0 || width === undefined) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+var isHeightValid = function (height) {
+    if (height === 0 || height === undefined) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+var isImageNameValid = function (imagename) {
+    if (imagename === undefined || imagename === '') {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+var isImageFileExtensionValid = function (imagename) {
+    var fileExtension = imagename.split('.');
+    if (fileExtension[1] != 'jpg') {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+var resizeImageAsync = function (data, width, height, imagename) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, sharp_1.default)(data).resize({ width: width, height: height })
+                    .toFile("assets/resizedImages/" + imagename)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 app.get('/api', function (_req, res) {
     res.status(200);
     res.send('Hello World');
 });
 app.get('/api/image', function (req, res) {
-    var imagename = req.query.imagename;
+    var imagename = String(req.query.imagename);
     var height = Number(req.query.height);
     var width = Number(req.query.width);
-    if (width === 0 || width === undefined) {
+    if (!isWidthValid(width)) {
         res.status(400);
         res.send('width query parameter is required.');
     }
-    if (height === 0 || height === undefined) {
+    if (!isHeightValid(width)) {
         res.status(400);
         res.send('height query parameter is required');
     }
-    if (imagename === undefined || imagename === '') {
+    if (!isImageNameValid(imagename)) {
         res.status(400);
         res.send('imagename query parameter is required.');
     }
     else {
-        (0, fs_1.readFile)("./assets/" + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+        if (!isImageFileExtensionValid(imagename)) {
+            res.status(400);
+            res.send('No file extension in the imagename. Please supply a valid image file extension.');
+        }
+        fs_1.default.readFile("./assets/resizedImages/" + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!error) return [3 /*break*/, 1];
-                        res.status(404);
-                        res.send("The requested file could not be found. " + imagename);
+                        fs_1.default.readFile("./assets/" + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        if (!error) return [3 /*break*/, 1];
+                                        res.status(404);
+                                        res.send("The requested file could not be found. " + imagename);
+                                        return [3 /*break*/, 3];
+                                    case 1: return [4 /*yield*/, resizeImageAsync(data, width, height, imagename).then(function () {
+                                            res.status(200);
+                                            res.sendFile("" + imagename, { root: './assets/resizedImages' });
+                                        })];
+                                    case 2:
+                                        _a.sent();
+                                        _a.label = 3;
+                                    case 3: return [2 /*return*/];
+                                }
+                            });
+                        }); });
                         return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, (0, sharp_1.default)(data).resize({ width: width, height: height })
-                            .toFile("assets/resizedImages/" + imagename)
-                            .then(function () {
+                    case 1: return [4 /*yield*/, resizeImageAsync(data, width, height, imagename).then((function () {
                             res.status(200);
                             res.sendFile("" + imagename, { root: './assets/resizedImages' });
-                        }).catch(function () {
-                            res.status(400);
-                            res.send("The requested image could not be resized.");
-                        })];
+                        }))];
                     case 2:
                         _a.sent();
                         _a.label = 3;
