@@ -56,9 +56,10 @@ app.get('/api/image', async (req: Request, res: Response) => {
                         res.status(404);
                         res.send('The saved image requested does not exist.');
                     } else {
-                        await imageProcessor.resizeImageAsync(data, width, height, imagename).then(() => {
+                        const resizedImageName = `fjord-${width}-${height}.jpg`;
+                        await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
                             res.status(200);
-                            res.sendFile(`${imagename}`, {root: './savedimages/resizedimages' })   
+                            res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' })   
                         });
                     }
                 });

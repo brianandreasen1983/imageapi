@@ -85,8 +85,8 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
             else {
                 savedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename);
                 if (savedImageExists) {
-                    // TODO: This should all be in the resize image async function.
                     fs_1.default.readFile("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+                        var resizedImageName_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -95,10 +95,12 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
                                     res.status(404);
                                     res.send('The saved image requested does not exist.');
                                     return [3 /*break*/, 3];
-                                case 1: return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, imagename).then(function () {
-                                        res.status(200);
-                                        res.sendFile("" + imagename, { root: './savedimages/resizedimages' });
-                                    })];
+                                case 1:
+                                    resizedImageName_1 = "fjord-" + width + "-" + height + ".jpg";
+                                    return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName_1).then(function () {
+                                            res.status(200);
+                                            res.sendFile("" + resizedImageName_1, { root: './savedimages/resizedimages' });
+                                        })];
                                 case 2:
                                     _a.sent();
                                     _a.label = 3;

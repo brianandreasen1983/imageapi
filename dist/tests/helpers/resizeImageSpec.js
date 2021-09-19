@@ -39,33 +39,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = __importDefault(require("../../index"));
-var supertest_1 = __importDefault(require("supertest"));
-var request = (0, supertest_1.default)(index_1.default);
-describe('image api endpoint tests', function () {
-    it('gets the api endpoint', function (done) { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+var path_1 = __importDefault(require("path"));
+var fs_1 = __importDefault(require("fs"));
+var imageProcessor_1 = __importDefault(require("../../utilities/imageProcessor"));
+var imageProcessor = new imageProcessor_1.default();
+describe('resize image test', function () {
+    it('resizes the image based on the parameters provided.', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var imagename, width, height, testFilePath;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api')];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    done();
-                    return [2 /*return*/];
-            }
+            imagename = 'fjord.jpg';
+            width = 500;
+            height = 200;
+            testFilePath = "." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename;
+            fs_1.default.readFile(testFilePath, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+                var resizedImageName;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!error) return [3 /*break*/, 1];
+                            console.log(error);
+                            return [3 /*break*/, 3];
+                        case 1:
+                            resizedImageName = "fjord-" + width + "-" + height + ".jpg";
+                            // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
+                            return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(function () {
+                                    console.log('SUCCESS!');
+                                })];
+                        case 2:
+                            // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
+                            _a.sent();
+                            _a.label = 3;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); });
+            return [2 /*return*/];
         });
     }); });
-    it('image api endpoint returns a resized image when all query parameters are supplied.', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: 200,
-            imagename: 'fjord.jpg',
-        }).then(function (response) {
-            expect(response.status).toBe(200);
-        }).catch(function (error) {
-            console.log('There was an error');
-            console.log(error);
-        });
-    });
 });
