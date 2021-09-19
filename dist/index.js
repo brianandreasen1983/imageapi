@@ -52,7 +52,7 @@ app.get('/api', function (_req, res) {
     res.send('Hello World');
 });
 app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var imageValidator, imageProcessor, fileSystem, imagename, height, width, resizedImageExists, savedImageExists;
+    var imageValidator, imageProcessor, fileSystem, imagename, height, width, fileExt, resizedImageName_1, resizedImageExists, savedImageExists;
     return __generator(this, function (_a) {
         imageValidator = new imageValidator_1.default();
         imageProcessor = new imageProcessor_1.default();
@@ -60,6 +60,7 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
         imagename = String(req.query.imagename);
         height = Number(req.query.height);
         width = Number(req.query.width);
+        fileExt = '.jpg';
         if (!imageValidator.isWidthValid(width)) {
             res.status(400);
             res.send('width query parameter is required.');
@@ -77,16 +78,16 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
             res.send('No file extension in the imagename. Please supply a valid image file extension.');
         }
         else {
-            resizedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" + path_1.default.sep + imagename);
+            resizedImageName_1 = imagename.split('.')[0] + "-" + width + "-" + height + fileExt;
+            resizedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" + path_1.default.sep + resizedImageName_1);
             if (resizedImageExists) {
                 res.status(200);
-                res.sendFile("" + imagename, { root: "." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" });
+                res.sendFile("" + resizedImageName_1, { root: "." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" });
             }
             else {
                 savedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename);
                 if (savedImageExists) {
                     fs_1.default.readFile("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
-                        var resizedImageName_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -95,12 +96,10 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
                                     res.status(404);
                                     res.send('The saved image requested does not exist.');
                                     return [3 /*break*/, 3];
-                                case 1:
-                                    resizedImageName_1 = "fjord-" + width + "-" + height + ".jpg";
-                                    return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName_1).then(function () {
-                                            res.status(200);
-                                            res.sendFile("" + resizedImageName_1, { root: './savedimages/resizedimages' });
-                                        })];
+                                case 1: return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName_1).then(function () {
+                                        res.status(200);
+                                        res.sendFile("" + resizedImageName_1, { root: './savedimages/resizedimages' });
+                                    })];
                                 case 2:
                                     _a.sent();
                                     _a.label = 3;
@@ -111,7 +110,7 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
                 }
                 else {
                     res.status(404);
-                    res.send('The imagename requested does not exist.');
+                    res.send('The image requested does not exist.');
                 }
             }
         }

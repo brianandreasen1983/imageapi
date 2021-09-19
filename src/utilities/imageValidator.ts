@@ -49,4 +49,16 @@ export default class ImageValidator {
             return true;
         }
     };
+
+    /** isValidNumber checks to see if the number is valid based on a numeric query parameter.
+     * @param queryParameter
+     * @returns boolean
+     */
+    isValidNumber = (queryParameter: number): boolean => {
+        if (isNaN(queryParameter)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

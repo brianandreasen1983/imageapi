@@ -20,9 +20,19 @@ app.get('/api/image', async (req: Request, res: Response) => {
     const fileSystem = new FileSystem();
 
     const imagename = String(req.query.imagename);
-    const height = Number(req.query.height);
-    const width = Number(req.query.width);
+    const height = parseInt(String(req.query.height));
+    const width = parseInt((String(req.query.width)));
     const fileExt = '.jpg';
+
+    if(!imageValidator.isValidNumber(width)) {
+        res.status(400);
+        res.send('query parameter width is not a number.');
+    }
+
+    if(!imageValidator.isValidNumber(height)) {
+        res.status(400);
+        res.send('query parameter width is not a number.');
+    }
 
     if(!imageValidator.isWidthValid(width)) {
         res.status(400);
@@ -60,8 +70,9 @@ app.get('/api/image', async (req: Request, res: Response) => {
                     } else {
                         await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
                             res.status(200);
-                            res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' })   
+                            res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' });
                         });
+                        // TODO: Add a catch for promise rejection?
                     }
                 });
             } else {
