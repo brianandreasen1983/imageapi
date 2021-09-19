@@ -22,6 +22,7 @@ app.get('/api/image', async (req: Request, res: Response) => {
     const imagename = String(req.query.imagename);
     const height = Number(req.query.height);
     const width = Number(req.query.width);
+    const fileExt = '.jpg';
 
     if(!imageValidator.isWidthValid(width)) {
         res.status(400);
@@ -43,10 +44,11 @@ app.get('/api/image', async (req: Request, res: Response) => {
         res.send('No file extension in the imagename. Please supply a valid image file extension.');
     }
     else {
-        const resizedImageExists = fileSystem.isImageExists(`.${path.sep}savedimages${path.sep}resizedimages${path.sep}${imagename}`);
+        const resizedImageName = `${imagename.split('.')[0]}-${width}-${height}${fileExt}`;
+        const resizedImageExists = fileSystem.isImageExists(`.${path.sep}savedimages${path.sep}resizedimages${path.sep}${resizedImageName}`);
         if(resizedImageExists) {
             res.status(200);
-            res.sendFile(`${imagename}`, {root: `.${path.sep}savedimages${path.sep}resizedimages` });
+            res.sendFile(`${resizedImageName}`, {root: `.${path.sep}savedimages${path.sep}resizedimages` });
         } else {
             const savedImageExists = fileSystem.isImageExists(`.${path.sep}savedimages${path.sep}${imagename}`);
             if(savedImageExists) {
@@ -56,7 +58,6 @@ app.get('/api/image', async (req: Request, res: Response) => {
                         res.status(404);
                         res.send('The saved image requested does not exist.');
                     } else {
-                        const resizedImageName = `fjord-${width}-${height}.jpg`;
                         await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
                             res.status(200);
                             res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' })   
@@ -65,7 +66,7 @@ app.get('/api/image', async (req: Request, res: Response) => {
                 });
             } else {
                 res.status(404);
-                res.send('The imagename requested does not exist.');
+                res.send('The image requested does not exist.');
             }
         }
     }
