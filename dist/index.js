@@ -41,137 +41,81 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var fs_1 = __importDefault(require("fs"));
-var sharp_1 = __importDefault(require("sharp"));
+var path_1 = __importDefault(require("path"));
+var imageValidator_1 = __importDefault(require("./utilities/imageValidator"));
+var imageProcessor_1 = __importDefault(require("./utilities/imageProcessor"));
+var fileSystem_1 = __importDefault(require("./utilities/fileSystem"));
 var app = (0, express_1.default)();
 var port = 3000;
-/** isWidthValid validates whether the number is 0 or undefined.
- * @params width
- * @returns boolean
- */
-var isWidthValid = function (width) {
-    if (width === 0 || width === undefined) {
-        return false;
-    }
-    else {
-        return true;
-    }
-};
-/** isHeightValid validates whether the number is 0 or undefined.
- * @params height
- * @returns boolean
- */
-var isHeightValid = function (height) {
-    if (height === 0 || height === undefined) {
-        return false;
-    }
-    else {
-        return true;
-    }
-};
-/** isImageNameValid validates whether the number is blank or undefined.
- * @params imagename
- * @returns boolean
- */
-var isImageNameValid = function (imagename) {
-    if (imagename === undefined || imagename === '') {
-        return false;
-    }
-    else {
-        return true;
-    }
-};
-/** isImageFileExtensionValid validates whether or not the imagename contains a valid .jpg extension
- * @params imagename
- * @returns boolean
- */
-var isImageFileExtensionValid = function (imagename) {
-    var fileExtension = imagename.split('.');
-    if (fileExtension[1] != 'jpg') {
-        return false;
-    }
-    else {
-        return true;
-    }
-};
-/** resizeImageAsync resizes a passed in image.
- * @params data
- * @params width
- * @params height
- * @params imagename
- * @returns OutputInfo
- */
-var resizeImageAsync = function (data, width, height, imagename) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, sharp_1.default)(data).resize({ width: width, height: height })
-                    .toFile("assets/resizedImages/" + imagename)];
-            case 1: return [2 /*return*/, _a.sent()];
-        }
-    });
-}); };
 app.get('/api', function (_req, res) {
     res.status(200);
     res.send('Hello World');
 });
-app.get('/api/image', function (req, res) {
-    var imagename = String(req.query.imagename);
-    var height = Number(req.query.height);
-    var width = Number(req.query.width);
-    if (!isWidthValid(width)) {
-        res.status(400);
-        res.send('width query parameter is required.');
-    }
-    if (!isHeightValid(width)) {
-        res.status(400);
-        res.send('height query parameter is required');
-    }
-    if (!isImageNameValid(imagename)) {
-        res.status(400);
-        res.send('imagename query parameter is required.');
-    }
-    else {
-        if (!isImageFileExtensionValid(imagename)) {
+app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var imageValidator, imageProcessor, fileSystem, imagename, height, width, resizedImageExists, savedImageExists;
+    return __generator(this, function (_a) {
+        imageValidator = new imageValidator_1.default();
+        imageProcessor = new imageProcessor_1.default();
+        fileSystem = new fileSystem_1.default();
+        imagename = String(req.query.imagename);
+        height = Number(req.query.height);
+        width = Number(req.query.width);
+        if (!imageValidator.isWidthValid(width)) {
+            res.status(400);
+            res.send('width query parameter is required.');
+        }
+        if (!imageValidator.isHeightValid(height)) {
+            res.status(400);
+            res.send('height query parameter is required');
+        }
+        if (!imageValidator.isImageNameValid(imagename)) {
+            res.status(400);
+            res.send('imagename query parameter is required.');
+        }
+        if (!imageValidator.isImageFileExtensionValid(imagename)) {
             res.status(400);
             res.send('No file extension in the imagename. Please supply a valid image file extension.');
         }
-        fs_1.default.readFile("./assets/resizedImages/" + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!error) return [3 /*break*/, 1];
-                        fs_1.default.readFile("./assets/" + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!error) return [3 /*break*/, 1];
-                                        res.status(404);
-                                        res.send("The requested file could not be found. " + imagename);
-                                        return [3 /*break*/, 3];
-                                    case 1: return [4 /*yield*/, resizeImageAsync(data, width, height, imagename).then(function () {
-                                            res.status(200);
-                                            res.sendFile("" + imagename, { root: './assets/resizedImages' });
-                                        })];
-                                    case 2:
-                                        _a.sent();
-                                        _a.label = 3;
-                                    case 3: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        return [3 /*break*/, 3];
-                    case 1: return [4 /*yield*/, resizeImageAsync(data, width, height, imagename).then((function () {
-                            res.status(200);
-                            res.sendFile("" + imagename, { root: './assets/resizedImages' });
-                        }))];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+        else {
+            resizedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" + path_1.default.sep + imagename);
+            if (resizedImageExists) {
+                res.status(200);
+                res.sendFile("" + imagename, { root: "." + path_1.default.sep + "savedimages" + path_1.default.sep + "resizedimages" });
+            }
+            else {
+                savedImageExists = fileSystem.isImageExists("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename);
+                if (savedImageExists) {
+                    // TODO: This should all be in the resize image async function.
+                    fs_1.default.readFile("." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!error) return [3 /*break*/, 1];
+                                    console.log(error);
+                                    res.status(404);
+                                    res.send('The saved image requested does not exist.');
+                                    return [3 /*break*/, 3];
+                                case 1: return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, imagename).then(function () {
+                                        res.status(200);
+                                        res.sendFile("" + imagename, { root: './savedimages/resizedimages' });
+                                    })];
+                                case 2:
+                                    _a.sent();
+                                    _a.label = 3;
+                                case 3: return [2 /*return*/];
+                            }
+                        });
+                    }); });
                 }
-            });
-        }); });
-    }
-});
+                else {
+                    res.status(404);
+                    res.send('The imagename requested does not exist.');
+                }
+            }
+        }
+        return [2 /*return*/];
+    });
+}); });
 app.listen(port, function () {
     console.log("Listening on port " + port);
 });

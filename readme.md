@@ -7,6 +7,8 @@ To run the server in the root of the project in terminal or in VS Code type in y
 To test this you can use a REST client tool such as postman and hit the api endpoint
 http://localhost:3000/api
 
+To run the automated test suite you can use yarn test in the CLI when its pointed to the project level to run the endpoint tests.
+
 You should receive a status of 200 with the text of Hello world being returned. 
 
 The endpoint to test is the image endpoint which is located at http://localhost:3000/api/image
@@ -20,10 +22,14 @@ icelandwaterfall.jpg
 palmtunnel.jpg
 santamonica.jpg
 
-If none of these are supplied as a fully qualified .jpg file you can expect it to fail.
+If none of these are supplied as a fully qualified .jpg file you can expect it to fail. The validations are performed in the imageValidator.ts file.
+
+Image Processing to resize the image is held within imageProcess.ts
+
+some helper functions for the file system such as to check if a directory exists or if a file path exists lives in fileSystem.ts file.
+
+Lastly an example request: localhost:3000/api/image?imagename=fjord.jpg&height=200&width=200
 
 If a requested resource is not found because the asset doesn't exist you can expect the endpoint to return that it can't be found.
-
-In order to run the tests for the repository you can type into terminal yarn test which will allow you to run all of the tests and lint the code.
 
 If you have any questions in how to run the repository please reach out to the author.

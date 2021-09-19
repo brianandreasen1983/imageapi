@@ -76,5 +76,4 @@ describe('image api endpoint tests', () => {
     //         console.log(error);
     //     })
     // });
-
 });
