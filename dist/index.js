@@ -44,6 +44,10 @@ var fs_1 = __importDefault(require("fs"));
 var sharp_1 = __importDefault(require("sharp"));
 var app = (0, express_1.default)();
 var port = 3000;
+/** isWidthValid validates whether the number is 0 or undefined.
+ * @params width
+ * @returns boolean
+ */
 var isWidthValid = function (width) {
     if (width === 0 || width === undefined) {
         return false;
@@ -52,6 +56,10 @@ var isWidthValid = function (width) {
         return true;
     }
 };
+/** isHeightValid validates whether the number is 0 or undefined.
+ * @params height
+ * @returns boolean
+ */
 var isHeightValid = function (height) {
     if (height === 0 || height === undefined) {
         return false;
@@ -60,6 +68,10 @@ var isHeightValid = function (height) {
         return true;
     }
 };
+/** isImageNameValid validates whether the number is blank or undefined.
+ * @params imagename
+ * @returns boolean
+ */
 var isImageNameValid = function (imagename) {
     if (imagename === undefined || imagename === '') {
         return false;
@@ -68,6 +80,10 @@ var isImageNameValid = function (imagename) {
         return true;
     }
 };
+/** isImageFileExtensionValid validates whether or not the imagename contains a valid .jpg extension
+ * @params imagename
+ * @returns boolean
+ */
 var isImageFileExtensionValid = function (imagename) {
     var fileExtension = imagename.split('.');
     if (fileExtension[1] != 'jpg') {
@@ -77,6 +93,13 @@ var isImageFileExtensionValid = function (imagename) {
         return true;
     }
 };
+/** resizeImageAsync resizes a passed in image.
+ * @params data
+ * @params width
+ * @params height
+ * @params imagename
+ * @returns OutputInfo
+ */
 var resizeImageAsync = function (data, width, height, imagename) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
