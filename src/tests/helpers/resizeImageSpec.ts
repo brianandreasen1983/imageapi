@@ -8,15 +8,13 @@ describe('resize image test' , () => {
     it('resizes the image based on the parameters provided.', async () => {
         const imagename = 'fjord.jpg';
         const width = 200;
-        const height = 200;
+        const height = 400;
         const testFilePath = `.${path.sep}savedimages${path.sep}${imagename}`
         fs.readFile(testFilePath, async (error, data) => {
             if(error) {
                 console.log(error);
-                // TODO: Send something back to the client like the file doesn't' exist.
             } else {
-                const resizedImageName = `fjord-${width}-${height}.jpg`;
-                // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
+                const resizedImageName = `${imagename.split('.')[0]}-${width}-${height}.jpg`;
                 await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
                     console.log('SUCCESS!');
                 });

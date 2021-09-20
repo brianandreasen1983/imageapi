@@ -58,9 +58,17 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
         imageProcessor = new imageProcessor_1.default();
         fileSystem = new fileSystem_1.default();
         imagename = String(req.query.imagename);
-        height = Number(req.query.height);
-        width = Number(req.query.width);
+        height = parseInt(String(req.query.height));
+        width = parseInt((String(req.query.width)));
         fileExt = '.jpg';
+        if (!imageValidator.isValidNumber(width)) {
+            res.status(400);
+            res.send('query parameter width is not a number.');
+        }
+        if (!imageValidator.isValidNumber(height)) {
+            res.status(400);
+            res.send('query parameter width is not a number.');
+        }
         if (!imageValidator.isWidthValid(width)) {
             res.status(400);
             res.send('width query parameter is required.');
@@ -92,7 +100,6 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
                             switch (_a.label) {
                                 case 0:
                                     if (!error) return [3 /*break*/, 1];
-                                    console.log(error);
                                     res.status(404);
                                     res.send('The saved image requested does not exist.');
                                     return [3 /*break*/, 3];

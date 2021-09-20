@@ -44,50 +44,34 @@ var fs_1 = __importDefault(require("fs"));
 var imageProcessor_1 = __importDefault(require("../../utilities/imageProcessor"));
 var imageProcessor = new imageProcessor_1.default();
 describe('resize image test', function () {
-    // it('resizes the image based on the parameters provided.', async () => {
-    //     const imagename = 'fjord.jpg';
-    //     const width = 200;
-    //     const height = 200;
-    //     const testFilePath = `.${path.sep}savedimages${path.sep}${imagename}`
-    //     fs.readFile(testFilePath, async (error, data) => {
-    //         if(error) {
-    //             console.log(error);
-    //             // TODO: Send something back to the client like the file doesn't' exist.
-    //         } else {
-    //             const resizedImageName = `fjord-${width}-${height}.jpg`;
-    //             // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
-    //             await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
-    //                 console.log('SUCCESS!');
-    //             });
-    //         }
-    //     });
-    // });
-    it('resizes and saves a different width and height of an image', function () {
-        var imagename = 'fjord.jpg';
-        var width = 500;
-        var height = 200;
-        var testFilePath = "." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename;
-        fs_1.default.readFile(testFilePath, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
-            var resizedImageName;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!error) return [3 /*break*/, 1];
-                        console.log(error);
-                        return [3 /*break*/, 3];
-                    case 1:
-                        resizedImageName = "fjord-" + width + "-" + height + ".jpg";
-                        // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
-                        return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(function () {
-                                console.log('SUCCESS!');
-                            })];
-                    case 2:
-                        // TODO: Rename the image to a convention like imagename-width-height-imgFileExtension to resize and store in the cache.
-                        _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
-    });
+    it('resizes the image based on the parameters provided.', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var imagename, width, height, testFilePath;
+        return __generator(this, function (_a) {
+            imagename = 'fjord.jpg';
+            width = 200;
+            height = 400;
+            testFilePath = "." + path_1.default.sep + "savedimages" + path_1.default.sep + imagename;
+            fs_1.default.readFile(testFilePath, function (error, data) { return __awaiter(void 0, void 0, void 0, function () {
+                var resizedImageName;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!error) return [3 /*break*/, 1];
+                            console.log(error);
+                            return [3 /*break*/, 3];
+                        case 1:
+                            resizedImageName = imagename.split('.')[0] + "-" + width + "-" + height + ".jpg";
+                            return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(function () {
+                                    console.log('SUCCESS!');
+                                })];
+                        case 2:
+                            _a.sent();
+                            _a.label = 3;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); });
+            return [2 /*return*/];
+        });
+    }); });
 });

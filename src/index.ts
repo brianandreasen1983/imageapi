@@ -64,7 +64,6 @@ app.get('/api/image', async (req: Request, res: Response) => {
             if(savedImageExists) {
                 fs.readFile(`.${path.sep}savedimages${path.sep}${imagename}`, async (error, data) => {
                     if(error) {
-                        console.log(error);
                         res.status(404);
                         res.send('The saved image requested does not exist.');
                     } else {

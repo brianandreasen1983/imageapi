@@ -52,6 +52,18 @@ var ImageValidator = /** @class */ (function () {
                 return true;
             }
         };
+        /** isValidNumber checks to see if the number is valid based on a numeric query parameter.
+         * @param queryParameter
+         * @returns boolean
+         */
+        this.isValidNumber = function (queryParameter) {
+            if (isNaN(queryParameter)) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        };
     }
     return ImageValidator;
 }());
