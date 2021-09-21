@@ -61,9 +61,7 @@ describe('resize image test', function () {
                             return [3 /*break*/, 3];
                         case 1:
                             resizedImageName = imagename.split('.')[0] + "-" + width + "-" + height + ".jpg";
-                            return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(function () {
-                                    console.log('SUCCESS!');
-                                })];
+                            return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName)];
                         case 2:
                             _a.sent();
                             _a.label = 3;

@@ -24,7 +24,6 @@ var FileSystem = /** @class */ (function () {
          * @returns boolean
          */
         this.isImageExists = function (filePath) {
-            console.log(filePath);
             if (fs_1.default.existsSync(filePath)) {
                 return true;
             }

@@ -50,12 +50,12 @@ export default class ImageValidator {
         }
     };
 
-    /** isValidNumber checks to see if the number is valid based on a numeric query parameter.
+    /** isValidNumber checks to see if the incoming value as a number from a query parameter is a number or negative value 
      * @param queryParameter
      * @returns boolean
      */
     isValidNumber = (queryParameter: number): boolean => {
-        if (isNaN(queryParameter)) {
+        if (isNaN(queryParameter) || queryParameter <= 0) {
             return false;
         } else {
             return true;

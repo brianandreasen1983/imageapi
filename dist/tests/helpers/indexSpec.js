@@ -56,76 +56,102 @@ describe('image api endpoint tests', function () {
             }
         });
     }); });
-    it('image api endpoint returns a resized image when all query parameters are supplied.', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: 200,
-            imagename: 'fjord.jpg',
-        }).then(function (response) {
-            expect(response.status).toBe(200);
-        }).catch(function (error) {
-            console.log('There was an error');
-            console.log(error);
+    it('image api endpoint returns a resized image when all query parameters are supplied.', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 200,
+                        height: 200,
+                        imagename: 'fjord.jpg',
+                    }).then(function (response) {
+                        expect(response.status).toBe(200);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('excluding image file extension should fail.', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: 300,
-            imagename: 'nono'
-        }).then(function (response) {
-            expect(response.status).toBe(400);
+    }); });
+    it('excluding image file extension should fail.', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 200,
+                        height: 300,
+                        imagename: 'nono'
+                    }).then(function (response) {
+                        expect(response.status).toBe(400);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('image that cannot be found should fail.', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: 300,
-            imagename: 'nono.jpg'
-        }).then(function (response) {
-            expect(response.status).toBe(404);
+    }); });
+    it('image that cannot be found should fail.', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 200,
+                        height: 300,
+                        imagename: 'nono.jpg'
+                    }).then(function (response) {
+                        expect(response.status).toBe(404);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('invalid width parameter as a string should fail', function () {
-        return request.get('/api/image').query({
-            width: 'apple',
-            height: 200,
-            imagename: 'fjord.jpg'
-        }).then(function (response) {
-            expect(response.status).toBe(400);
+    }); });
+    it('invalid width parameter as a string should fail', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 'apple',
+                        height: 200,
+                        imagename: 'fjord.jpg'
+                    }).then(function (response) {
+                        expect(response.status).toBe(400);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('invalid height parameter as a string should fail', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: 'iscool',
-            imagename: 'fjord.jpg'
-        }).then(function (response) {
-            expect(response.status).toBe(400);
+    }); });
+    it('invalid height parameter as a string should fail', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 200,
+                        height: 'iscool',
+                        imagename: 'fjord.jpg'
+                    }).then(function (response) {
+                        expect(response.status).toBe(400);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('invalid width parameter as a negative number should fail', function () {
-        return request.get('/api/image').query({
-            width: -1,
-            height: 200,
-            imagename: 'fjord.jpg'
-        }).then(function (response) {
-            expect(response.status).toBe(400);
-        }).catch(function (error) {
-            console.log('there was an error');
-            // TODO: Unhandled promise rejection: expected positive integer for width but received NaN of type number.
+    }); });
+    it('invalid width parameter as a negative number should fail', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: -1,
+                        height: 200,
+                        imagename: 'fjord.jpg'
+                    }).then(function (response) {
+                        expect(response.status).toBe(400);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
-    it('invalid height parameter as a negative number should fail', function () {
-        return request.get('/api/image').query({
-            width: 200,
-            height: -1,
-            imagename: 'fjord.jpg'
-        }).then(function (response) {
-            expect(response.status).toBe(400);
-        }).catch(function (error) {
-            console.log('there was an error');
-            // TODO: Unhandled promise rejection: expected positive integer for width but received NaN of type number.
+    }); });
+    it('invalid height parameter as a negative number should fail', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/image').query({
+                        width: 200,
+                        height: -1,
+                        imagename: 'fjord.jpg'
+                    }).then(function (response) {
+                        expect(response.status).toBe(400);
+                    })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    });
+    }); });
 });

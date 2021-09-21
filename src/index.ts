@@ -14,7 +14,7 @@ app.get('/api', (_req: Request, res: Response) => {
     res.send('Hello World');
 });
 
-app.get('/api/image', async (req: Request, res: Response) => {
+app.get('/api/image', async (req: Request, res: Response, next) => {
     const imageValidator = new ImageValidator();
     const imageProcessor = new ImageProcessor();
     const fileSystem = new FileSystem();
@@ -70,8 +70,7 @@ app.get('/api/image', async (req: Request, res: Response) => {
                         await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
                             res.status(200);
                             res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' });
-                        });
-                        // TODO: Add a catch for promise rejection?
+                        }).catch(next);
                     }
                 });
             } else {

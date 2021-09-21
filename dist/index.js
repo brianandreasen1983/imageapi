@@ -51,7 +51,7 @@ app.get('/api', function (_req, res) {
     res.status(200);
     res.send('Hello World');
 });
-app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get('/api/image', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var imageValidator, imageProcessor, fileSystem, imagename, height, width, fileExt, resizedImageName_1, resizedImageExists, savedImageExists;
     return __generator(this, function (_a) {
         imageValidator = new imageValidator_1.default();
@@ -106,7 +106,7 @@ app.get('/api/image', function (req, res) { return __awaiter(void 0, void 0, voi
                                 case 1: return [4 /*yield*/, imageProcessor.resizeImageAsync(data, width, height, resizedImageName_1).then(function () {
                                         res.status(200);
                                         res.sendFile("" + resizedImageName_1, { root: './savedimages/resizedimages' });
-                                    })];
+                                    }).catch(next)];
                                 case 2:
                                     _a.sent();
                                     _a.label = 3;

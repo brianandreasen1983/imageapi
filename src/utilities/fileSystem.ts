@@ -19,7 +19,6 @@ export default class FileSystem {
      * @returns boolean
      */
     isImageExists = (filePath: string): boolean => {
-        console.log(filePath)
     if (fs.existsSync(filePath)) {
         return true;
     } else {

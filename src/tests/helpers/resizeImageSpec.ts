@@ -15,9 +15,7 @@ describe('resize image test' , () => {
                 console.log(error);
             } else {
                 const resizedImageName = `${imagename.split('.')[0]}-${width}-${height}.jpg`;
-                await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
-                    console.log('SUCCESS!');
-                });
+                await imageProcessor.resizeImageAsync(data, width, height, resizedImageName);
             }
         });
     });
