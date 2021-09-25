@@ -12,9 +12,7 @@ export default class ImageProcessor {
      * @returns OutputInfo
      */
     resizeImageAsync = async (data: Buffer, width: number, height: number, imagename: string): Promise<OutputInfo> => {
-        const resizedImageName = this.resizeImageFileName(width, height, imagename);
-        // return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${resizedImageName}`);
-        return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${resizedImageName}`);
+        return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${imagename}`);
     };
 
     /** renameImage renames the image so that it provides a naming convention for the resized file name */
