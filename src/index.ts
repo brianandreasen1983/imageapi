@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express';
 import fs from 'fs';
-import path from 'path'
-import ImageValidator from './utilities/imageValidator';
+import path from 'path';
+import QueryParameterValidator from './utilities/queryParameterValidator';
 import ImageProcessor from './utilities/imageProcessor';
 import FileSystem from './utilities/fileSystem';
-
-
+import sharp from 'sharp';
 const app = express();
 const port = 3000;
 
@@ -15,74 +14,76 @@ app.get('/api', (_req: Request, res: Response) => {
 });
 
 app.get('/api/image', async (req: Request, res: Response, next) => {
-    const imageValidator = new ImageValidator();
+    const imageValidator = new QueryParameterValidator();
     const imageProcessor = new ImageProcessor();
     const fileSystem = new FileSystem();
 
-    const imagename = String(req.query.imagename);
-    const height = parseInt(String(req.query.height));
-    const width = parseInt((String(req.query.width)));
-    const fileExt = '.jpg';
+    const imagename = `${req.query.imagename as string}.jpg`;
+    const height = parseInt(req.query.height as string);
+    const width = parseInt(req.query.width as string);
 
-    if(!imageValidator.isValidNumber(width)) {
-        res.status(400);
-        res.send('query parameter width is not a number.');
+    if (!imageValidator.isValidNumber(width)) {
+        return res.status(400).send('query parameter width is not a number.');
     }
 
-    if(!imageValidator.isValidNumber(height)) {
-        res.status(400);
-        res.send('query parameter width is not a number.');
+    if (!imageValidator.isValidNumber(height)) {
+        return res.status(400).send('query parameter height is not a number.');
     }
 
-    if(!imageValidator.isWidthValid(width)) {
-        res.status(400);
-        res.send('width query parameter is required.');
+    if (!imageValidator.isHeightWidthValid(width)) {
+        return res.status(400).send('width query parameter is required.');
     }
 
-    if(!imageValidator.isHeightValid(height)) {
-        res.status(400);
-        res.send('height query parameter is required');
+    if (!imageValidator.isHeightWidthValid(height)) {
+        return res.status(400).send('height query parameter is required');
     }
 
-    if(!imageValidator.isImageNameValid(imagename)) {
-        res.status(400);
-        res.send('imagename query parameter is required.');
-    }
+    if (!imageValidator.isImageNameValid(imagename)) {
+        return res.status(400).send('imagename query parameter is required.');
+    } else {
+        const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
+        console.log('RESIZED IMAGE NAME', resizedImageName);
 
-    if(!imageValidator.isImageFileExtensionValid(imagename)){
-        res.status(400);
-        res.send('No file extension in the imagename. Please supply a valid image file extension.');
-    }
-    else {
-        const resizedImageName = `${imagename.split('.')[0]}-${width}-${height}${fileExt}`;
-        const resizedImageExists = fileSystem.isImageExists(`.${path.sep}savedimages${path.sep}resizedimages${path.sep}${resizedImageName}`);
-        if(resizedImageExists) {
-            res.status(200);
-            res.sendFile(`${resizedImageName}`, {root: `.${path.sep}savedimages${path.sep}resizedimages` });
+        const resizedImagePath = `.${path.sep}savedimages${path.sep}resizedimages${path.sep}${resizedImageName}`;
+        console.log('RESIZED IMAGE PATH', resizedImagePath);
+
+        const savedImagePath = `.${path.sep}savedimages${path.sep}${imagename}`;
+        console.log('SAVED IMAGE PATH', savedImagePath);
+
+        const resizedImageExists = fileSystem.isPathExists(resizedImagePath);
+        console.log('RESIZED IMAGE EXISTS', resizedImageExists);
+
+        if (resizedImageExists) {
+            return res.status(200).sendFile(resizedImageName, {
+                root: `.${path.sep}savedimages${path.sep}resizedimages`,
+            });
         } else {
-            const savedImageExists = fileSystem.isImageExists(`.${path.sep}savedimages${path.sep}${imagename}`);
-            if(savedImageExists) {
-                fs.readFile(`.${path.sep}savedimages${path.sep}${imagename}`, async (error, data) => {
-                    if(error) {
-                        res.status(404);
-                        res.send('The saved image requested does not exist.');
+            const savedImageExists = fileSystem.isPathExists(savedImagePath);
+            console.log('SAVED IMAGE EXISTS', savedImageExists);
+
+            if (savedImageExists) {
+                console.log('SAVED IMAGE PATH', savedImagePath);
+                fs.readFile(`${savedImagePath}`, async (error, data) => {
+                    if (error) {
+                        console.log('ERROR', error);
+                        throw error;
                     } else {
-                        await imageProcessor.resizeImageAsync(data, width, height, resizedImageName).then(() => {
-                            res.status(200);
-                            res.sendFile(`${resizedImageName}`, {root: './savedimages/resizedimages' });
-                        }).catch(next);
+                        const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
+                        await imageProcessor.resizeImageAsync(data, width, height, resizedImageName);
+                        return res.status(200).sendFile(`${resizedImageName}`, {
+                            root: `.${path.sep}savedimages${path.sep}resizedimages`,
+                        });
                     }
                 });
             } else {
-                res.status(404);
-                res.send('The image requested does not exist.');
+                return res.status(404).send('The requested image does not exist.');
             }
         }
     }
-})
+});
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
-})
+});
 
 export default app;

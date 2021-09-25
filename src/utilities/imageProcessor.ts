@@ -4,7 +4,7 @@
 import sharp, { OutputInfo } from 'sharp';
 
 export default class ImageProcessor {
-        /** resizeImageAsync resizes a passed in image.
+    /** resizeImageAsync resizes a passed in image.
      * @params data
      * @params width
      * @params height
@@ -12,7 +12,14 @@ export default class ImageProcessor {
      * @returns OutputInfo
      */
     resizeImageAsync = async (data: Buffer, width: number, height: number, imagename: string): Promise<OutputInfo> => {
-        return await sharp(data).resize({width, height})
-                        .toFile(`savedimages/resizedimages/${imagename}`);
+        const resizedImageName = this.resizeImageFileName(width, height, imagename);
+        // return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${resizedImageName}`);
+        return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${resizedImageName}`);
+    };
+
+    /** renameImage renames the image so that it provides a naming convention for the resized file name */
+    resizeImageFileName = (width: number, height: number, imagename: string): string => {
+        const resizedImageName = `${imagename.split('.')[0]}-${width}-${height}.jpg`;
+        return resizedImageName;
     };
 }

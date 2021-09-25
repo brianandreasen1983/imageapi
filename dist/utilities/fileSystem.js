@@ -1,37 +1,34 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-/** FileReader is a class used to read files using the fs module within nodeJS */
-var fs_1 = __importDefault(require("fs"));
+'use strict';
+var __importDefault =
+    (this && this.__importDefault) ||
+    function (mod) {
+        return mod && mod.__esModule ? mod : { default: mod };
+    };
+Object.defineProperty(exports, '__esModule', { value: true });
+var fs_1 = __importDefault(require('fs'));
 var FileSystem = /** @class */ (function () {
     function FileSystem() {
-        /** isDirectoryExists returns a true if the directory exists false otherwise.
-         * @param directoryPath
-         * @returns boolean
-         */
-        this.isDirectoryExists = function (directoryPath) {
-            if (fs_1.default.existsSync(directoryPath)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        };
-        /** isImageExists returns true if the file exists for the image, false otherwise.
+        /** isPathExists returns true if the file path exists for the image, false otherwise.
          * @param filePath
          * @returns boolean
          */
-        this.isImageExists = function (filePath) {
+        this.isPathExists = function (filePath) {
             if (fs_1.default.existsSync(filePath)) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         };
+        /** removeFileAsyn takes in a fully qualified file path it will return true if the file has been deleted. */
+        this.removeFileAsync = function (filePath) {
+            fs_1.default.unlink(filePath, function (err) {
+                if (err) {
+                    return false;
+                }
+            });
+            return true;
+        };
     }
     return FileSystem;
-}());
+})();
 exports.default = FileSystem;

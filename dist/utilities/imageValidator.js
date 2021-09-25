@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 /** ImageValidator is used to hold all of the functions to validate an image based on its query parameters. */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 var ImageValidator = /** @class */ (function () {
     function ImageValidator() {
         /** isWidthValid validates whether the number is 0 or undefined.
@@ -10,8 +10,7 @@ var ImageValidator = /** @class */ (function () {
         this.isWidthValid = function (width) {
             if (width === 0 || width === undefined) {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         };
@@ -22,8 +21,7 @@ var ImageValidator = /** @class */ (function () {
         this.isHeightValid = function (height) {
             if (height === 0 || height === undefined) {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         };
@@ -34,8 +32,7 @@ var ImageValidator = /** @class */ (function () {
         this.isImageNameValid = function (imagename) {
             if (imagename === undefined || imagename === '') {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         };
@@ -47,8 +44,7 @@ var ImageValidator = /** @class */ (function () {
             var fileExtension = imagename.split('.');
             if (fileExtension[1] != 'jpg') {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         };
@@ -59,12 +55,11 @@ var ImageValidator = /** @class */ (function () {
         this.isValidNumber = function (queryParameter) {
             if (isNaN(queryParameter) || queryParameter <= 0) {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         };
     }
     return ImageValidator;
-}());
+})();
 exports.default = ImageValidator;
