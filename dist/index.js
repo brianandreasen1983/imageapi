@@ -165,7 +165,7 @@ app.get('/api/image', function (req, res, next) {
             imageValidator = new queryParameterValidator_1.default();
             imageProcessor = new imageProcessor_1.default();
             fileSystem = new fileSystem_1.default();
-            imagename = '' + req.query.imagename;
+            imagename = req.query.imagename + '.jpg';
             height = parseInt(req.query.height);
             width = parseInt(req.query.width);
             if (!imageValidator.isValidNumber(width)) {
@@ -184,7 +184,6 @@ app.get('/api/image', function (req, res, next) {
                 return [2 /*return*/, res.status(400).send('imagename query parameter is required.')];
             } else {
                 resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
-                console.log('RESIZED IMAGE NAME', resizedImageName);
                 resizedImagePath =
                     '.' +
                     path_1.default.sep +
@@ -193,48 +192,54 @@ app.get('/api/image', function (req, res, next) {
                     'resizedimages' +
                     path_1.default.sep +
                     resizedImageName;
-                console.log('RESIZED IMAGE PATH', resizedImagePath);
                 savedImagePath = '.' + path_1.default.sep + 'savedimages' + path_1.default.sep + imagename;
-                console.log('SAVED IMAGE PATH', savedImagePath);
                 resizedImageExists = fileSystem.isPathExists(resizedImagePath);
-                console.log('RESIZED IMAGE EXISTS', resizedImageExists);
-                // If the resized image exists serve it from the cache.
-                // otherwise look to see if the image exists as a saved image
-                // resize it
-                // save it in the resizedimages directory.
                 if (resizedImageExists) {
-                    // return res.status(200).sendFile(`${resizedImageName}`, {
-                    //     root: `${resizedImagePath}`,
-                    // });
-                    res.status(200);
+                    return [
+                        2 /*return*/,
+                        res.status(200).sendFile(resizedImageName, {
+                            root: '.' + path_1.default.sep + 'savedimages' + path_1.default.sep + 'resizedimages',
+                        }),
+                    ];
                 } else {
                     savedImageExists = fileSystem.isPathExists(savedImagePath);
-                    console.log('SAVED IMAGE EXISTS', savedImageExists);
                     if (savedImageExists) {
-                        console.log('SAVED IMAGE PATH', savedImagePath);
-                        fs_1.default.readFile('' + savedImagePath, function (_error, data) {
+                        fs_1.default.readFile('' + savedImagePath, function (error, data) {
                             return __awaiter(void 0, void 0, void 0, function () {
+                                var resizedImageName_1;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
+                                            if (!error) return [3 /*break*/, 1];
+                                            throw error;
+                                        case 1:
+                                            resizedImageName_1 = imageProcessor.resizeImageFileName(
+                                                width,
+                                                height,
+                                                imagename,
+                                            );
                                             return [
                                                 4 /*yield*/,
-                                                imageProcessor
-                                                    .resizeImageAsync(data, width, height, imagename)
-                                                    .then(function () {
-                                                        return res.status(200).sendFile('' + imagename, {
-                                                            root:
-                                                                '.' +
-                                                                path_1.default.sep +
-                                                                'savedimages' +
-                                                                path_1.default.sep +
-                                                                'resizedimages',
-                                                        });
-                                                    }),
+                                                imageProcessor.resizeImageAsync(
+                                                    data,
+                                                    width,
+                                                    height,
+                                                    resizedImageName_1,
+                                                ),
                                             ];
-                                        case 1:
+                                        case 2:
                                             _a.sent();
-                                            return [2 /*return*/];
+                                            return [
+                                                2 /*return*/,
+                                                res.status(200).sendFile('' + resizedImageName_1, {
+                                                    root:
+                                                        '.' +
+                                                        path_1.default.sep +
+                                                        'savedimages' +
+                                                        path_1.default.sep +
+                                                        'resizedimages',
+                                                }),
+                                            ];
                                     }
                                 });
                             });

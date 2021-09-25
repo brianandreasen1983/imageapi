@@ -16,7 +16,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: 200,
                 height: 200,
-                imagename: `fjord.jpg`,
+                imagename: `fjord`,
             })
             .then((response) => {
                 expect(response.status).toBe(200);
@@ -29,7 +29,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: 200,
                 height: 200,
-                imagename: 'nono.jpg',
+                imagename: 'nono',
             })
             .then((response) => {
                 expect(response.status).toBe(404);
@@ -42,7 +42,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: 'apple',
                 height: 200,
-                imagename: 'fjord.jpg',
+                imagename: 'fjord',
             })
             .then((response) => {
                 expect(response.status).toBe(400);
@@ -55,7 +55,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: 200,
                 height: 'iscool',
-                imagename: 'fjord.jpg',
+                imagename: 'fjord',
             })
             .then((response) => {
                 expect(response.status).toBe(400);
@@ -68,7 +68,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: -1,
                 height: 200,
-                imagename: 'fjord.jpg',
+                imagename: 'fjord',
             })
             .then((response) => {
                 expect(response.status).toBe(400);
@@ -81,7 +81,7 @@ describe('image api endpoint tests', () => {
             .query({
                 width: 200,
                 height: -1,
-                imagename: 'fjord.jpg',
+                imagename: 'fjord',
             })
             .then((response) => {
                 expect(response.status).toBe(400);

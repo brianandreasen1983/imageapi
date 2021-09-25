@@ -168,7 +168,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: 200,
                                     height: 200,
-                                    imagename: 'fjord.jpg',
+                                    imagename: 'fjord',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(200);
@@ -192,7 +192,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: 200,
                                     height: 200,
-                                    imagename: 'nono.jpg',
+                                    imagename: 'nono',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(404);
@@ -216,7 +216,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: 'apple',
                                     height: 200,
-                                    imagename: 'fjord.jpg',
+                                    imagename: 'fjord',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(400);
@@ -240,7 +240,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: 200,
                                     height: 'iscool',
-                                    imagename: 'fjord.jpg',
+                                    imagename: 'fjord',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(400);
@@ -264,7 +264,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: -1,
                                     height: 200,
-                                    imagename: 'fjord.jpg',
+                                    imagename: 'fjord',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(400);
@@ -288,7 +288,7 @@ describe('image api endpoint tests', function () {
                                 .query({
                                     width: 200,
                                     height: -1,
-                                    imagename: 'fjord.jpg',
+                                    imagename: 'fjord',
                                 })
                                 .then(function (response) {
                                     expect(response.status).toBe(400);

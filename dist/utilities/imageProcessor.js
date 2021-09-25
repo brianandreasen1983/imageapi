@@ -152,19 +152,16 @@ var ImageProcessor = /** @class */ (function () {
          */
         this.resizeImageAsync = function (data, width, height, imagename) {
             return __awaiter(_this, void 0, void 0, function () {
-                var resizedImageName;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            resizedImageName = this.resizeImageFileName(width, height, imagename);
                             return [
                                 4 /*yield*/,
                                 (0, sharp_1.default)(data)
                                     .resize({ width: width, height: height })
-                                    .toFile('savedimages/resizedimages/' + resizedImageName),
+                                    .toFile('savedimages/resizedimages/' + imagename),
                             ];
                         case 1:
-                            // return await sharp(data).resize({ width, height }).toFile(`savedimages/resizedimages/${resizedImageName}`);
                             return [2 /*return*/, _a.sent()];
                     }
                 });
@@ -172,7 +169,7 @@ var ImageProcessor = /** @class */ (function () {
         };
         /** renameImage renames the image so that it provides a naming convention for the resized file name */
         this.resizeImageFileName = function (width, height, imagename) {
-            var resizedImageName = imagename.split('.')[0] + '-' + width + '-' + height;
+            var resizedImageName = imagename.split('.')[0] + '-' + width + '-' + height + '.jpg';
             return resizedImageName;
         };
     }

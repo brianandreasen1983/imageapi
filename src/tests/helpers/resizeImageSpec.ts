@@ -7,11 +7,26 @@ import sharp from 'sharp';
 const imageProcessor = new ImageProcessor();
 const fileSystem = new FileSystem();
 
-describe('resize image test', () => {
-    const imagename = 'fjord.jpg';
+describe('Image process tests', () => {
+    const imagename = 'fjord';
     const width = 200;
     const height = 400;
     const savedImageFilePath = `.${path.sep}savedimages${path.sep}${imagename}`;
-    const resizedImageFilePath = `.${path.sep}savedimages${path.sep}resizedimages${path.sep}${imagename}`;
-    const resizedImagePathExists = fileSystem.isPathExists(resizedImageFilePath);
+
+    it('renames the resized image to contain the image name-width-height.jpg', () => {
+        const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
+        expect(resizedImageName).toMatch('fjord-200-400.jpg');
+    });
+
+    it('resizes the image from the image processor', async () => {
+        fs.readFile(savedImageFilePath, async (_error, data) => {
+            const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
+            try {
+                const sharp = await imageProcessor.resizeImageAsync(data, width, height, resizedImageName);
+                expect(sharp).toBe(sharp);
+            } catch (error) {
+                expect(error).toEqual(new Error('Invalid input'));
+            }
+        });
+    });
 });

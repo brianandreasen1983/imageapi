@@ -42,16 +42,9 @@ app.get('/api/image', async (req: Request, res: Response, next) => {
         return res.status(400).send('imagename query parameter is required.');
     } else {
         const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
-        console.log('RESIZED IMAGE NAME', resizedImageName);
-
         const resizedImagePath = `.${path.sep}savedimages${path.sep}resizedimages${path.sep}${resizedImageName}`;
-        console.log('RESIZED IMAGE PATH', resizedImagePath);
-
         const savedImagePath = `.${path.sep}savedimages${path.sep}${imagename}`;
-        console.log('SAVED IMAGE PATH', savedImagePath);
-
         const resizedImageExists = fileSystem.isPathExists(resizedImagePath);
-        console.log('RESIZED IMAGE EXISTS', resizedImageExists);
 
         if (resizedImageExists) {
             return res.status(200).sendFile(resizedImageName, {
@@ -59,13 +52,10 @@ app.get('/api/image', async (req: Request, res: Response, next) => {
             });
         } else {
             const savedImageExists = fileSystem.isPathExists(savedImagePath);
-            console.log('SAVED IMAGE EXISTS', savedImageExists);
 
             if (savedImageExists) {
-                console.log('SAVED IMAGE PATH', savedImagePath);
                 fs.readFile(`${savedImagePath}`, async (error, data) => {
                     if (error) {
-                        console.log('ERROR', error);
                         throw error;
                     } else {
                         const resizedImageName = imageProcessor.resizeImageFileName(width, height, imagename);
